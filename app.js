@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    return res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/getTodos', (req, res) => {
@@ -19,7 +19,21 @@ app.get('/getTodos', (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            res.status(200).json(documents);
+            return res.status(200).json(documents);
+        }
+    });
+});
+
+app.put('/:id', (req, res) => {
+    const taskId = req.params.id;
+    const updatedTask = req.body;
+
+    db.getDb().collection(collection)
+    .findOneAndUpdate({ _id: db.getPrimaryKey(taskId)}, {$set: { name: updatedTask}}, {returnDocument: 'after'}, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+             return res.status(200).json(result);
         }
     });
 });
