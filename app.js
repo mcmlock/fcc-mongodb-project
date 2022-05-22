@@ -29,7 +29,7 @@ app.put('/:id', (req, res) => {
     const updatedTask = req.body;
 
     db.getDb().collection(collection)
-    .findOneAndUpdate({ _id: db.getPrimaryKey(taskId)}, {$set: { name: updatedTask}}, {returnDocument: 'after'}, (err, result) => {
+    .findOneAndUpdate({ _id: db.getPrimaryKey(taskId)}, {$set: updatedTask}, {returnDocument: 'after'}, (err, result) => {
         if (err) {
             return res.status(404).json({ "error": `${err}`});
         } else {

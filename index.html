@@ -76,8 +76,8 @@
             const buildIds = todo => {
                 return {
                     todoId: 'todo_' + todo._id,
-                    editId: 'edit_' + todo._id,
-                    deleteId: 'delete_' + todo._id,
+                    editBtnId: 'edit_' + todo._id,
+                    deleteBtnId: 'delete_' + todo._id,
                     listItemId: 'listItem_' + todo._id
                 }
             }
@@ -89,12 +89,31 @@
                         <div class="col-md-4" id=${ids.todoId}>${todo.name}</div>
                         <div class="col-md-4"></div>
                         <div class="col-md-4 text-right">
-                            <button class="btn btn-secondary" id=${ids.editId}>Edit</button>
-                            <button class="btn btn-danger" id=${ids.deleteId}>Delete</button>    
+                            <button class="btn btn-secondary" id=${ids.editBtnId}>Edit</button>
+                            <button class="btn btn-danger" id=${ids.deleteBtnId}>Delete</button>    
                         </div>
                     </div>
                 </li>
                 `
+            }
+
+            const editTodo = (todo, todoId, editBtnId) => {
+                $(`#${editBtnId}`).click(() => {
+                    fetch(`/${todo._id}`, {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: todoTextInput.val()})
+                    }).then(response => {
+                        return response.json();
+                    }).then(response => {
+                        $(`#${todoId}`).text(response.value.name);
+                        console.log(response);
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                });
             }
 
             const deleteTodo = (todo, listItemId, deleteBtnId) => {
@@ -116,8 +135,8 @@
                 data.forEach(todo => {
                     let ids = buildIds(todo);
                     todoList.append(todoTemplate(todo, ids));
-                    // editTodo(todo, ids.listItemId, ids.editId);
-                    deleteTodo(todo, ids.listItemId, ids.deleteId);
+                    editTodo(todo, ids.todoId, ids.editBtnId);
+                    deleteTodo(todo, ids.listItemId, ids.deleteBtnId);
                 });
             }
 
