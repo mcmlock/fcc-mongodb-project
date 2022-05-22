@@ -11,8 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-//    return res.sendFile(path.join(__dirname, 'index.html'));
- return res.send('Placeholder');
+    return res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/getTodos', (req, res) => {
